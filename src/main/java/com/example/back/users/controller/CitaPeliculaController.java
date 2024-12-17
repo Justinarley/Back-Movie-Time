@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.back.users.model.CitaPelicula;
+import com.example.back.users.model.CitaPeliculasCine;
 import com.example.back.users.service.CitaPeliculaService;
 
 @RestController
@@ -19,19 +19,27 @@ public class CitaPeliculaController {
 
     // Obtener todas las citas de películas
     @GetMapping("/all")
-    public ResponseEntity<List<CitaPelicula>> getAllCitas() {
-        List<CitaPelicula> citas = citaPeliculaService.getAllCitas();
+    public ResponseEntity<List<CitaPeliculasCine>> getAllCitas() {
+        List<CitaPeliculasCine> citas = citaPeliculaService.getAllCitas();
         return ResponseEntity.ok(citas);
     }
 
     // Registrar una nueva cita de película
     @PostMapping("/register")
-    public ResponseEntity<String> registerCita(@RequestBody CitaPelicula citaPelicula) {
-        String result = citaPeliculaService.registerCita(citaPelicula);
-        if (result.contains("exitosamente")) {
+    public ResponseEntity<String> registerCita(@RequestBody CitaPeliculasCine citaPelicula) {
+        try {
+            // Validamos que los campos requeridos estén presentes
+            if (citaPelicula.getNombrePelicula() == null || 
+                citaPelicula.getFechaFuncion() == null || 
+                citaPelicula.getHoraFuncion() == null) {
+                return ResponseEntity.badRequest().body("Los campos nombre, fecha y hora son obligatorios.");
+            }
+    
+            String result = citaPeliculaService.registerCita(citaPelicula);
             return ResponseEntity.ok(result);
-        } else {
-            return ResponseEntity.badRequest().body(result);
+        } catch (Exception e) {
+            // Captura cualquier excepción y devuelve un mensaje de error 500
+            return ResponseEntity.status(500).body("Error al registrar la cita: " + e.getMessage());
         }
     }
 

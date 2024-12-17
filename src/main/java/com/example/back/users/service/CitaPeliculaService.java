@@ -6,9 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.back.users.model.CitaPelicula;
+import com.example.back.users.model.CitaPeliculasCine;
 import com.example.back.users.repository.CitaPeliculaRepository;
-
 @Service
 public class CitaPeliculaService {
 
@@ -16,23 +15,28 @@ public class CitaPeliculaService {
     private CitaPeliculaRepository citaPeliculaRepository;
 
     // Obtener todas las citas de películas
-    public List<CitaPelicula> getAllCitas() {
+    public List<CitaPeliculasCine> getAllCitas() {
         return citaPeliculaRepository.findAll();
     }
 
     // Registrar una nueva cita de película
-    public String registerCita(CitaPelicula citaPelicula) {
-        if (citaPelicula.getNombrePelicula() == null || citaPelicula.getHorarioFuncion() == null) {
-            return "Los campos nombre de película y horario de función son obligatorios.";
+    public String registerCita(CitaPeliculasCine citaPelicula) {
+        if (citaPelicula.getNombrePelicula() == null || 
+            citaPelicula.getFechaFuncion() == null || 
+            citaPelicula.getHoraFuncion() == null || 
+            citaPelicula.getEntradas() <= 0) {
+            return "Los campos nombre, fecha, hora y entradas son obligatorios.";
         }
+    
+        // El precio total ya no se calcula en el backend
+        // Solo guardamos la información relevante (entradas, nombre, fecha, hora)
 
-        // Guardar la cita en la base de datos
         citaPeliculaRepository.save(citaPelicula);
-        return "Cita de película registrada exitosamente.";
+        return "Cita de película registrada exitosamente";
     }
 
     // Obtener una cita específica por ID
-    public Optional<CitaPelicula> getCitaById(Long id) {
+    public Optional<CitaPeliculasCine> getCitaById(Long id) {
         return citaPeliculaRepository.findById(id);
     }
 }

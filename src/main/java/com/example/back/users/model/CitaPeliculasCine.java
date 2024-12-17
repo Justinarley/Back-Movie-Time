@@ -1,15 +1,17 @@
 package com.example.back.users.model;
-import java.time.LocalDateTime;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
 @Entity
-public class CitaPelicula {
-    
+public class CitaPeliculasCine {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,16 +19,15 @@ public class CitaPelicula {
     private String nombrePelicula;
 
     @Column(nullable = false)
-    private LocalDateTime horarioFuncion;
+    private LocalDate fechaFuncion;
+
+    @Column(nullable = false)
+    private LocalTime horaFuncion;
 
     @Column(nullable = false)
     private int entradas;
 
-    @Lob
-    private String imagenUrl;
-
     // Getters y Setters
-
     public Long getId() {
         return id;
     }
@@ -43,12 +44,20 @@ public class CitaPelicula {
         this.nombrePelicula = nombrePelicula;
     }
 
-    public LocalDateTime getHorarioFuncion() {
-        return horarioFuncion;
+    public LocalDate getFechaFuncion() {
+        return fechaFuncion;
     }
 
-    public void setHorarioFuncion(LocalDateTime horarioFuncion) {
-        this.horarioFuncion = horarioFuncion;
+    public void setFechaFuncion(LocalDate fechaFuncion) {
+        this.fechaFuncion = fechaFuncion;
+    }
+
+    public LocalTime getHoraFuncion() {
+        return horaFuncion;
+    }
+
+    public void setHoraFuncion(LocalTime horaFuncion) {
+        this.horaFuncion = horaFuncion;
     }
 
     public int getEntradas() {
@@ -59,11 +68,6 @@ public class CitaPelicula {
         this.entradas = entradas;
     }
 
-    public String getImagenUrl() {
-        return imagenUrl;
-    }
-
-    public void setImagenUrl(String imagenUrl) {
-        this.imagenUrl = imagenUrl;
-    }
+    // Ya no es necesario el método de calcular total
+    // El precio total solo se calculará en el frontend
 }
