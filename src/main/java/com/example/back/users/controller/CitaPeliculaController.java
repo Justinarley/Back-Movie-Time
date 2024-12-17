@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import com.example.back.users.model.CitaPeliculasCine;
 import com.example.back.users.service.CitaPeliculaService;
 
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("api-citas")
-@CrossOrigin(origins = "http://localhost:8081")
 public class CitaPeliculaController {
 
     @Autowired
