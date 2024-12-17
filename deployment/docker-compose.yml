@@ -1,0 +1,52 @@
+version: "3.8"
+services:
+  application:
+    image: movitime:1
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    ports:
+      - target: 7000
+        published: 7000
+        protocol: tcp
+        mode: host
+    networks:
+      - movitime_net
+      - traefik-public
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.application.entrypoints=http"
+        - "traefik.http.routers.application.rule=Host(`movitime.byronrm.com`)"
+        - "traefik.http.middlewares.application-https-redirect.redirectscheme.scheme=https"
+        - "traefik.http.routers.application.middlewares=portainer-https-redirect"
+        - "traefik.http.routers.application-secure.entrypoints=https"
+        - "traefik.http.routers.application-secure.rule=Host(`movitime.byronrm.com`)"
+        - "traefik.http.routers.application-secure.tls=true"
+        - "traefik.http.routers.application-secure.tls.certresolver=http"
+        - "traefik.http.routers.application-secure.service=application"
+        - "traefik.http.services.application.loadbalancer.server.port=8080"
+        - "traefik.docker.network=traefik-public"
+
+  MoviTimedb:
+    image: postgres:15.0-bullseye
+    environment:
+      - TZ=America/Guayaquil
+      - POSTGRES_DB=movitime
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_USER=postgres
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - pg_movitime_data:/var/lib/postgresql/data/pgdata
+    networks:
+      - movitime_net
+
+volumes:
+  pg_movitime_data:
+    external: true
+
+networks:
+  movitime_net:
+    external: true
+
+  traefik-public:
+    external: true
