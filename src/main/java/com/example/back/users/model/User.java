@@ -29,7 +29,7 @@ public class User {
     private String correo;
 
     @Column(nullable = false)
-    private String password; // Eliminado unique=true, ya que no es necesario.
+    private String password;
 
     @Column(nullable = false)
     private String celular;
